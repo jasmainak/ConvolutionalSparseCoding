@@ -3,7 +3,6 @@ import convolutionalsparsecoding_1D as CSC
 import time
 import mne
 import os.path as op
-from matplotlib import pyplot as plt
 
 data_path = op.join(mne.datasets.sample.data_path(), 'MEG',
                     'sample', 'sample_audvis_raw.fif')
@@ -30,4 +29,6 @@ data = data[:, ::4]
 max_it = 50
 tol = 1e-3
 
-d, z, Dz = CSC.learn_conv_sparse_coder(b, size_kernel, lambda_residual, lambda_prior, max_it, tol)
+# can take up to 2 hours
+d, z, Dz = CSC.learn_conv_sparse_coder(b, size_kernel, lambda_residual,
+                                       lambda_prior, max_it, tol)
