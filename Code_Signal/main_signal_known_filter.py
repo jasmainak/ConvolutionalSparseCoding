@@ -1,6 +1,7 @@
 """
 This code is used to find codes for signal data when the filter is already known
 """
+import os
 import numpy as np
 from scipy.io import loadmat
 import CSC_signal as CSC
@@ -15,17 +16,19 @@ data_path = '../EEG/'
 result_path = '../Code_Signal/Result/'
 
 # Load the available result from previous times of running
-output = np.load(result_path + 'result_eeg_50_128_201.npz')
+if os.path.exists(result_path + 'result_eeg_50_128_201.npz'):
+    output = np.load(result_path + 'result_eeg_50_128_201.npz')
 
-# d is the known filter
-d = output['d']
-# list of objective function's values after each iteration
-list_obj_val = output['list_obj_val']
-# list of objective function's values after each d update
-list_obj_val_filter = output['list_obj_val_filter']
-# list of objective function's values after each z update
-list_obj_val_z = output['list_obj_val_z']
-
+    # d is the known filter
+    d = output['d']
+    # list of objective function's values after each iteration
+    list_obj_val = output['list_obj_val']
+    # list of objective function's values after each d update
+    list_obj_val_filter = output['list_obj_val_filter']
+    # list of objective function's values after each z update
+    list_obj_val_z = output['list_obj_val_z']
+else:
+    d = None
 
 # Load data to be run
 mat = loadmat(data_path + 'eeg_data.mat')
