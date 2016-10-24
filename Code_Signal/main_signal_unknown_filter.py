@@ -23,7 +23,8 @@ b = ((b.T - np.mean(b, axis=1)) / np.std(b, axis=1)).T
 
 # Define the parameters
 # 128 kernels with size of 201
-size_kernel = [2, 45]
+size_kernel = [2, 61]
+# size_kernel = [2, 51]
 
 ch_names = ['EEG%03d' % i for i in range(n_signal)]
 info = create_info(ch_names, sfreq=sfreq, ch_types='eeg')
@@ -31,7 +32,7 @@ raw = RawArray(eeg_signal * 1e-6, info)
 raw.plot(scalings=dict(eeg='auto'), duration=300)
 
 # Optim options
-max_it = 30  # the number of iterations
+max_it = 200  # the number of iterations
 tol = np.float64(1e-3)  # the stop threshold for the algorithm
 
 # RUN THE ALGORITHM
