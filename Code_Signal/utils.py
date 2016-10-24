@@ -38,7 +38,7 @@ def add_atom(data, atom, low, high, random_state=None):
         data[i, start: start + support] = atom
 
 
-def mock_data(n_samples=100, support=20, random_state=None):
+def mock_data(n_samples=100, support=20, noise_level=0.1, random_state=None):
     rng = check_random_state(random_state)
 
     n_times = 300
@@ -66,13 +66,13 @@ def mock_data(n_samples=100, support=20, random_state=None):
 
     low = 0
     high = n_times // 2 - tri.shape[0]
-    add_atom(data, atom=tri, low=low, high=high, random_state=None)
+    add_atom(data, atom=tri, low=low, high=high, random_state=random_state)
     low = n_times // 2
     high = n_times - square.shape[0]
-    add_atom(data, atom=square, low=low, high=high, random_state=None)
+    add_atom(data, atom=square, low=low, high=high, random_state=random_state)
 
     # add some random noise
-    data = data + 0.1 * rng.rand(*data.shape)
+    data = data + noise_level * rng.rand(*data.shape)
     print('[Done]')
 
     sfreq = 1

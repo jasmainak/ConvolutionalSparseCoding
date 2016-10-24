@@ -1,13 +1,17 @@
 """
-- This code implements a solver for the paper "Fast and Flexible Convolutional Sparse Coding" on signal data.
-- The goal of this solver is to find the common filters, the codes for each signal series in the dataset
+- This code implements a solver for the paper
+  "Fast and Flexible Convolutional Sparse Coding" on signal data.
+- The goal of this solver is to find the common filters, the codes for each
+  signal series in the dataset
 and a reconstruction for the dataset.
-- The common filters (or kernels) and the codes for each image is denoted as d and z respectively
+- The common filters (or kernels) and the codes for each image is denoted as
+  d and z respectively
 - We denote the step to solve the filter as d-step and the codes z-step
 """
 import numpy as np
 from scipy import linalg
 from scipy.fftpack import fft, ifft
+from mne.utils import check_random_state
 
 real_type = 'float64'
 imaginary_type = 'complex128'
@@ -15,7 +19,8 @@ imaginary_type = 'complex128'
 
 def learn_conv_sparse_coder(b, size_kernel, max_it, tol,
                             known_d=None,
-                            beta=np.float64(1.0)):
+                            beta=np.float64(1.0),
+                            random_state=None):
     """
     Main function to solve the convolutional sparse coding
     Parameters for this function
@@ -31,6 +36,7 @@ def learn_conv_sparse_coder(b, size_kernel, max_it, tol,
     - d_D, d_Z        : pair of Lagrange multipliers in the ADMM algo for d-step and z-step
     - v_D, v_Z        : pair of initial value pairs (Zd, d) for d-step and (Dz, z) for z-step
     """
+    rng = check_random_state(random_state)
 
     k = size_kernel[0]
     n = b.shape[0]
@@ -77,7 +83,7 @@ def learn_conv_sparse_coder(b, size_kernel, max_it, tol,
         v_D = [np.zeros(varsize_D[0], dtype=real_type),
                np.zeros(varsize_D[1], dtype=real_type)]
 
-        d = np.random.normal(size=size_kernel)
+        d = rng.normal(size=size_kernel)
     else:
         d = known_d
 
@@ -107,7 +113,7 @@ def learn_conv_sparse_coder(b, size_kernel, max_it, tol,
            np.zeros(varsize_Z[1], dtype=real_type)]
 
     # Initial the codes and its fft
-    z = np.random.normal(size=size_z)
+    z = rng.normal(size=size_z)
     z_hat = fft(z)
 
     """Initial objective function (usually very large)"""

@@ -12,7 +12,7 @@ from utils import load_data
 
 start = time.clock()
 
-eeg_signal, sfreq = load_data('simulated')
+eeg_signal, sfreq = load_data('simulated', noise_level=0, random_state=42)
 
 n_signal = eeg_signal.shape[0]  # the number of signals
 n_sample = eeg_signal.shape[1]  # dimension of each signal
@@ -36,7 +36,7 @@ tol = np.float64(1e-3)  # the stop threshold for the algorithm
 
 # RUN THE ALGORITHM
 [d, z, Dz, list_obj_val, list_obj_val_filter, list_obj_val_z, reconstr_err] = \
-    CSC.learn_conv_sparse_coder(b, size_kernel, max_it, tol)
+    CSC.learn_conv_sparse_coder(b, size_kernel, max_it, tol, random_state=42)
 
 plt.figure()
 plt.plot(d[0, :])
