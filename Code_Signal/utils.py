@@ -25,15 +25,14 @@ def plot_data(data, match=None, axes=None, title=None):
     return axes
 
 
-def add_atom(data, atom, random_state=None):
+def add_atom(data, atom, low, high, random_state=None):
     rng = check_random_state(random_state)
 
     support = atom.shape[0]
     n_samples = data.shape[0]
 
-    starts = rng.random_integers(low=0, high=data.shape[1] - support,
-                                 size=(300))
-
+    starts = rng.random_integers(low=low, high=high,
+                                 size=(n_samples))
     for i in range(n_samples):
         start = starts[i]
         data[i, start: start + support] = atom
@@ -42,7 +41,8 @@ def add_atom(data, atom, random_state=None):
 def mock_data(n_samples=100, support=20, random_state=None):
     rng = check_random_state(random_state)
 
-    data = np.zeros((n_samples, 300))
+    n_times = 300
+    data = np.zeros((n_samples, n_times))
 
     print('Computing morlet')
     # morl = signal.morlet(support).real
@@ -64,11 +64,15 @@ def mock_data(n_samples=100, support=20, random_state=None):
     square = np.hstack((square[::2], square[::2]))
     square = square / np.linalg.norm(square)
 
-    add_atom(data, atom=tri, random_state=None)
-    add_atom(data, atom=square, random_state=None)
+    low = 0
+    high = n_times // 2 - tri.shape[0]
+    add_atom(data, atom=tri, low=low, high=high, random_state=None)
+    low = n_times // 2
+    high = n_times - square.shape[0]
+    add_atom(data, atom=square, low=low, high=high, random_state=None)
 
     # add some random noise
-    # data = data + 0.01 * rng.rand(*data.shape)
+    data = data + 0.1 * rng.rand(*data.shape)
     print('[Done]')
 
     sfreq = 1
